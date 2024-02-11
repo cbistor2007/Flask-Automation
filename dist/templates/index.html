@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+    <title>Automation</title>
+    <!---
+    <link href="{{ url_for('static', filename='/main.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='/bootstrap.min.css')}}" rel="stylesheet" />
+    <link href="./static/main.css" rel="stylesheet" />
+    <link href="./static/bootstrap.min.css" rel="stylesheet" /> -->
+</head>
+<body>
+    <form action="/sound_change" method="post">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Sound Change Theater 5</label>
+          <input type="text" id="theater_number" name="theater_number"><br><br>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+</body>
+</html>
+
+<script>
+  async function getRequest(url = '') {
+      const response = await fetch(url, {
+          method: 'GET',
+          cache: 'no-cache'
+      })
+      return response.json()
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+      let url = document.location
+      let route = "/flaskwebgui-keep-server-alive"
+      let interval_request = 3 * 1000 //sec
+      function keep_alive_server() {
+          getRequest(url + route)
+              .then(data => console.log(data))
+      }
+      setInterval(keep_alive_server, interval_request)()
+  })
+</script>

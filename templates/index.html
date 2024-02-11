@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+    <title>Automation</title>
+    <!---
+    <link href="{{ url_for('static', filename='/main.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='/bootstrap.min.css')}}" rel="stylesheet" /> -->
+    <link href="./static/main.css" rel="stylesheet" />
+    <link href="./static/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body onload="onLoad()">
+    <h1>Total Theaters: {{ total_theater_val }}</h1>
+    <div id="theater_form">                
+        <!-- empty -->
+      </div>
+    <script type="text/javascript">
+        var total_theater_count_passed = '{{ total_theater_val }}'
+        //alert("THEATER COUNT: " + total_theater_count_passed)
+        var i = 0;
+        var myHTML = '';
+        function onLoad() {
+            while(i<total_theater_count_passed){
+                // Create a form dynamically
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "/sound_change");
+
+                // Create an input element for Full Name
+                var theater_number = document.createElement("input");
+                theater_number.setAttribute("type", "text");
+                theater_number.setAttribute("name", "theater_number");
+                theater_number.setAttribute("id", "theater_number");
+                theater_number.setAttribute("placeholder", "Theater Number");
+
+                // Create an Dropdown for Sound Change
+                var sound_choices = document.createElement("select");
+                var opt = document.createElement("option"); 
+                opt.text = 'Mute';
+                opt.value = 'non_sync';
+                sound_choices.appendChild(opt);
+                var opt = document.createElement("option"); 
+                opt.text = 'Movie';
+                opt.value = 'movie';
+                sound_choices.appendChild(opt);
+
+                // create a submit button
+                var s = document.createElement("input");
+                s.setAttribute("type", "submit");
+                s.setAttribute("class", "btn btn-primary");
+                s.setAttribute("value", "Submit");
+
+                // Append the full name input to the form
+                form.appendChild(theater_number);
+                
+                // Append the sound options dropdown to the form
+                form.appendChild(sound_choices); 
+
+                // Append the submit button to the form
+                form.appendChild(s); 
+ 
+                document.getElementsByTagName("body")[0]
+               .appendChild(form);
+               
+                i = i + 1;
+            }
+        }
+    </script>
+
+    <form action="/sound_change" method="post">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Sound Change Theater 5</label>
+          <input type="text" id="theater_number" name="theater_number"><br><br>
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+</body>
+</html>
