@@ -1,31 +1,24 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 
-block_cipher = None
-
-
 a = Analysis(
-    ['server.py'],
+    ['E:/Projection Automation Flask/server.py'],
     pathex=[],
     binaries=[],
-    datas=[('./templates/*', 'templates'), ('./static/*', 'static')],
+    datas=[('C:/Program Files (x86)/Windows Kits/10/Redist/ucrt/DLLs/x86/', 'x86/')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
-    win_no_prefer_redirects=False,
-    win_private_assemblies=False,
-    cipher=block_cipher,
     noarchive=False,
 )
-pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+pyz = PYZ(a.pure)
 
 exe = EXE(
     pyz,
     a.scripts,
     a.binaries,
-    a.zipfiles,
     a.datas,
     [],
     name='server',

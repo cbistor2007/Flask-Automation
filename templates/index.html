@@ -6,73 +6,648 @@
     <link href="{{ url_for('static', filename='/main.css')}}" rel="stylesheet" />
     <link href="{{ url_for('static', filename='/bootstrap.min.css')}}" rel="stylesheet" /> -->
     <link href="./static/main.css" rel="stylesheet" />
-    <link href="./static/bootstrap.min.css" rel="stylesheet" />
-</head>
-<body onload="onLoad()">
-    <h1>Total Theaters: {{ total_theater_val }}</h1>
-    <div id="theater_form">                
-        <!-- empty -->
-      </div>
-    <script type="text/javascript">
-        var total_theater_count_passed = '{{ total_theater_val }}'
-        //alert("THEATER COUNT: " + total_theater_count_passed)
-        var i = 0;
-        var myHTML = '';
-        function onLoad() {
-            while(i<total_theater_count_passed){
-                // Create a form dynamically
-                var form = document.createElement("form");
-                form.setAttribute("method", "post");
-                form.setAttribute("action", "/sound_change");
-
-                // Create an input element for Full Name
-                var theater_number = document.createElement("input");
-                theater_number.setAttribute("type", "text");
-                theater_number.setAttribute("name", "theater_number");
-                theater_number.setAttribute("id", "theater_number");
-                theater_number.setAttribute("placeholder", "Theater Number");
-
-                // Create an Dropdown for Sound Change
-                var sound_choices = document.createElement("select");
-                var opt = document.createElement("option"); 
-                opt.text = 'Mute';
-                opt.value = 'non_sync';
-                sound_choices.appendChild(opt);
-                var opt = document.createElement("option"); 
-                opt.text = 'Movie';
-                opt.value = 'movie';
-                sound_choices.appendChild(opt);
-
-                // create a submit button
-                var s = document.createElement("input");
-                s.setAttribute("type", "submit");
-                s.setAttribute("class", "btn btn-primary");
-                s.setAttribute("value", "Submit");
-
-                // Append the full name input to the form
-                form.appendChild(theater_number);
-                
-                // Append the sound options dropdown to the form
-                form.appendChild(sound_choices); 
-
-                // Append the submit button to the form
-                form.appendChild(s); 
- 
-                document.getElementsByTagName("body")[0]
-               .appendChild(form);
-               
-                i = i + 1;
-            }
+    <link href="./static/bootstrap_v431.min.css" rel="stylesheet" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+    <style>
+        .main_backround{
+            background-color:#454545;
         }
+
+        .theater_card_header{
+            background: #3b3b3b;
+            font-size: 26px;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+        .theater_card_body{
+            margin-top: -1rem;
+        }
+
+        .theater_card {
+            background: rgb(110,106,107);
+            background: linear-gradient(151deg, rgba(110,106,107,1) 0%, rgba(77,111,152,1) 100%);
+            width: fit-content;
+            border: .2rem solid;
+            border-color: #32a1ce;
+        }
+
+        .theater_card_all {
+            background: rgb(110,106,107);
+            background: linear-gradient(151deg, rgba(110,106,107,1) 0%, rgba(77,111,152,1) 100%);
+            width: fit-content;
+        }
+
+        .theater_card_all_header{
+            background: #CFFF09;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 900;
+            color: #000000;
+        }
+        
+        .theater_card_all_body{
+            background: #FFFFFF;
+        }
+
+        .inner_card{
+            background: #FFFFFF;
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .inner_card_body{
+            background: #FFFFFF;
+            height: 60px;
+        }
+
+        .card_header{
+            background: #595959;
+            color: #FFFFFF;
+            font-size: 14px;
+        }
+
+        .submit_button{
+            background: rgb(224,255,232,1);
+            color: #000000;
+            border-color: #000000;
+            border-radius: 6px;
+        }
+
+        .cust_column{
+            padding-top: 1rem;
+            margin-left: 3rem;
+            margin-right: 3rem;
+        }
+
+        .select_boxes{
+            min-width: 152px;
+        }
+
+        .choices{
+            font-size: 18px;
+        }
+
+        .theater_card_all_row{
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .all_theater_button{
+            width: 200px;
+            height: 70px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 2px;
+            margin-bottom: 8px;
+        }
+
+        .all_theater_button.thunderstorm{
+            background: #09FFF8;
+            color: #000000;
+            border-color: #000000;
+            border-radius: 6px;
+        }
+        
+        .all_theater_button.powerrestore{
+            background: #923370;
+            color: #FFFFFF;
+            border-color: #000000;
+            border-radius: 6px;
+        }
+
+        .all_theater_button.bulb_on{
+            background: #F3FF40;
+            color: #000000;
+            border-color: #000000;
+            border-radius: 6px;
+        }
+
+        .all_theater_button.bulb_off{
+            background: #FF2828;
+            color: #FFFFFF;
+            border-color: #000000;
+            border-radius: 6px;
+        }
+        
+        .all_theater_button.bulb_status{
+            background: #57FFCA;
+            color: #000000;
+            border-color: #000000;
+            border-radius: 6px;
+        }
+
+        .all_theater_button.projector_status{
+            background: #C2C2C2;
+            color: #000000;
+            border-color: #000000;
+            border-radius: 6px;
+        }
+        .projector_red{
+            width: 30px;
+            height: 30px;
+            fill: #D22B2B;
+        }
+
+        .projector_green{
+            width: 30px;
+            height: 30px;
+            fill: #64b816;
+        }
+
+        .projector_unknown{
+            width: 30px;
+            height: 30px;
+            fill: #DBF1FF; 
+        }
+        
+        .light_bulb_unknown {
+            fill: #AC9DFF;
+        }
+
+        .light_bulb_yellow {
+            fill: #FFFF00;
+        }
+
+        .light_bulb_red {
+            fill: #FF0000;
+        }
+
+        .log_area{
+            width: 30%;
+            min-height: 300px;
+            max-height: 300px;
+        }
+    </style>
+  
+</head>
+<body class="main_backround">
+    <script>
+        function get_bulb_states_all(){
+            console.log("Bulb Status Fetch Started");
+            document.getElementById("internal_log").value += "Bulb Status Fetch Started\n";
+            var i = 0;
+            var css_class = "light_bulb_unknown";
+            var bulb_state = "";
+            var theater_num = "";
+            var element_id = "";
+            var returned_data = [];
+            $.ajax({
+                url: "/get_all_bulb_states",
+                type: "POST",
+                success: function(data) {
+                    returned_data = data;
+                    //console.log("Returned: " + returned_data)
+                    while(i<returned_data.length){
+                        //console.log(returned_data[i].theater_num);
+                        //console.log(returned_data[i].bulb_state);
+                        theater_num = returned_data[i].theater_num;
+                        bulb_state = returned_data[i].bulb_state;
+                        console.log("Theater " + theater_num + " has a bulb state of " + bulb_state);
+                        if(bulb_state=="unknown"){
+                            css_class = "light_bulb_unknown";
+                        }
+                        else if(bulb_state=="off"){
+                            css_class = "light_bulb_red";
+                        }
+                        else if(bulb_state=="on"){
+                            css_class = "light_bulb_yellow";
+                        }
+                        else{
+                            css_class = "light_bulb_unknown";
+                        }
+                        element_id = "light_bulb_"+theater_num.toString();
+                        //console.log("Element ID: " + element_id)
+                        //console.log("Class: " + css_class);
+                        var li = document.getElementById(element_id).getAttribute("class");
+                        //console.log(li);
+                        document.getElementById(element_id).setAttribute("class",css_class);
+                        //document.getElementById(element_id);
+                        i+=1;
+                    }
+                    document.getElementById("internal_log").value += "Bulb Status Fetch Complete\n";
+                    console.log("Bulb Status Fetch Complete");
+                },
+                error: function (jqXHR, exception) {
+                    document.getElementById("internal_log").value += "Bulb Status Fetch Failed\n";
+                    console.log("Bulb Status Fetch Failed");
+                }
+            });    
+        }    
+
+        function turn_all_bulbs_on(){
+            console.log("All Bulbs On Executed");
+            $.ajax({
+                url: "/bulb_on_all",
+                type: "POST",
+                success: function(data) {
+                    document.getElementById("internal_log").value += "All Bulbs On Complete. Check Status.\n";
+                    console.log("All Bulbs On Completed");
+                },
+                error: function (jqXHR, exception) {
+                    document.getElementById("internal_log").value += "All Bulbs On Failed. Go for a walk and check them. I have failed you. :( \n";
+                    console.log("All Bulbs On Failed");
+                }
+            })
+            
+            var timeleft = 45;
+            var refreshTimer = setInterval(function(){
+            if(timeleft <= 0){
+                clearInterval(refreshTimer);
+                console.log("Countdown Finished");
+                //Get and update all bulbs
+                get_bulb_states_all()
+            } else {
+                console.log(timeleft + " seconds remaining");
+            }
+            timeleft -= 1;
+            }, 1000);
+                
+        }
+
+        function timer(){
+            var timeleft = 45;
+            var refreshTimer = setInterval(function(){
+            if(timeleft <= 0){
+                clearInterval(refreshTimer);
+                console.log("Countdown Finished");
+                //Get and update all bulbs
+                get_bulb_states_all()
+            } else {
+                console.log(timeleft + " seconds remaining");
+            }
+            timeleft -= 1;
+            }, 1000);
+                
+        }
+
+        function turn_all_bulbs_off(){
+            console.log("All Bulbs Off Executed");
+            $.ajax({
+                url: "/bulb_off_all",
+                type: "POST",
+                success: function(data) {
+                    document.getElementById("internal_log").value += "All Bulbs Off Complete. Check Status.\n";
+                    console.log("All Bulbs Off Completed");
+                },
+                error: function (jqXHR, exception) {
+                    document.getElementById("internal_log").value += "All Bulbs Off Failed. Go for a walk and check them. I have failed you. :( \n";
+                    console.log("All Bulbs Off Failed");
+                }
+            })
+
+            //Get and update all bulbs
+            get_bulb_states_all()
+        }
+
+        function sound_change(formId){
+            var returnArray = {};
+            for (var i = 0; i < formId.length; i++){
+                returnArray[formId[i]['name']] = formId[i]['value'];
+            }
+            console.log(returnArray);
+            theater_num = returnArray['theater_id'];
+            command = returnArray['sound_change'];
+            console.log("Theater Number: " + theater_num);
+            console.log("Command: " + command);
+            $.ajax({
+                url: "/sound_change",
+                type: "POST",
+                data: {theater_id: theater_num, exe_command: command},
+                success: function(data) {
+                    document.getElementById("internal_log").value += "Sound Change on Theater" + theater_num + " Complete.\n";
+                    console.log("Sound Change on Theater" + theater_num + " Complete.")
+                },
+                error: function (jqXHR, exception) {
+                    document.getElementById("internal_log").value += "Sound Change on Theater" + theater_num + " Failed.\n";
+                    console.log("Sound Change on Theater" + theater_num + " Failed.")
+                }
+            })
+        }
+   
+        function projector_execute(formId){
+            var returnArray = {};
+            for (var i = 0; i < formId.length; i++){
+                returnArray[formId[i]['name']] = formId[i]['value'];
+            }
+            console.log(returnArray);
+            theater_num = returnArray['theater_id'];
+            command = returnArray['projector_command'];
+            console.log("Theater Number: " + theater_num);
+            console.log("Command: " + command);
+
+            $.ajax({
+                url: "/projector_execute",
+                type: "POST",
+                data: {theater_id: theater_num, exe_command: command},
+                success: function(data) {
+                    document.getElementById("internal_log").value += "Projector " + theater_num + " " + command + " Complete.\n";
+                },
+                error: function (jqXHR, exception) {
+                    document.getElementById("internal_log").value += "Projector " + theater_num + " " + command + " Failed.\n";
+                }
+            })
+
+            if(command==bulb_off){
+                console.log("Bulb Off Command")
+                //Get and update all bulbs
+                get_bulb_states_all()
+            }
+            
+        }   
+
+        function server_execute(formId){
+            var returnArray = {};
+            for (var i = 0; i < formId.length; i++){
+                returnArray[formId[i]['name']] = formId[i]['value'];
+            }
+            console.log(returnArray);
+            theater_num = returnArray['theater_id'];
+            command = returnArray['server_command'];
+            console.log("Theater Number: " + theater_num);
+            console.log("Command: " + command);
+
+            $.ajax({
+                url: "/server_execute",
+                type: "POST",
+                data: {theater_id: theater_num, exe_command: command},
+                success: function(data) {
+                    document.getElementById("internal_log").value += "Server " + theater_num + " " + command + " Complete.\n";
+                },
+                error: function (jqXHR, exception) {
+                    document.getElementById("internal_log").value += "Server " + theater_num + " " + command + " Failed.\n";
+                }
+            })
+        }      
+
+        function thunderstorm_execute(){
+            console.log("Command Thunderstorm Executed");
+            $.ajax({
+                url: "/thunderstorm",
+                type: "POST",
+                success: function(data) {
+                    document.getElementById("internal_log").value += "Thunderstorm Command Executed and is Complete.\n";
+                    console.log("Command Thunderstorm Complete");
+                },
+                error: function (jqXHR, exception) {
+                    document.getElementById("internal_log").value += "Thunderstorm Command Failed.\n";
+                }
+            })
+
+            timer()
+        }  
+
+        function power_restore_execute(){
+            console.log("Command Power Restored Executed");
+            $.ajax({
+                url: "/power_restored",
+                type: "POST",
+                success: function(data) {
+                    document.getElementById("internal_log").value += "Power Restored Command Executed and is Complete.\n";
+                    console.log("Command Power Restored Complete");
+                },
+                error: function (jqXHR, exception) {
+                    document.getElementById("internal_log").value += "Power Restored Command Failed.\n";
+                }
+            })
+        }  
+
+        function get_projector_states_all(){
+            var i = 0;
+            console.log("Projector Status Fetch Executed");
+            document.getElementById("internal_log").value += "Projector Status Fetch Started\n";
+            $.ajax({
+                url: "/get_all_projector_states",
+                type: "POST",
+                success: function(data) {
+                    returned_data = data;
+                    //console.log("Returned: " + returned_data)
+                    while(i<returned_data.length){
+                        //console.log(returned_data[i].theater_num);
+                        //console.log(returned_data[i].bulb_state);
+                        theater_num = returned_data[i].theater_num;
+                        power_status = returned_data[i].power_status;
+                        console.log("Theater " + theater_num + " has a projector state of " + power_status);
+                        if(power_status=="unknown"){
+                            css_class = "projector_unknown";
+                        }
+                        else if(power_status=="off"){
+                            css_class = "projector_red";
+                        }
+                        else if(power_status=="on"){
+                            css_class = "projector_green";
+                        }
+                        else{
+                            css_class = "projector_unknown";
+                        }
+                        element_id = "projector_svg_"+theater_num.toString();
+                        //console.log("Element ID: " + element_id)
+                        //console.log("Class: " + css_class);
+                        var li = document.getElementById(element_id).getAttribute("class");
+                        //console.log(li);
+                        document.getElementById(element_id).setAttribute("class",css_class);
+                        //document.getElementById(element_id);
+                        i+=1;
+                    }
+                    document.getElementById("internal_log").value += "Projector Status Fetch Complete\n";
+                    console.log("Projector Status Fetch Complete");
+                },
+                error: function (jqXHR, exception) {
+                    document.getElementById("internal_log").value += "Projector Status Fetch Failed\n";
+                    console.log("Projector Status Fetch Failed");
+                }
+            })
+        }  
     </script>
 
-    <form action="/sound_change" method="post">
-        <div class="form-group">
-          <label for="exampleInputEmail1">Sound Change Theater 5</label>
-          <input type="text" id="theater_number" name="theater_number"><br><br>
+    <div class="container-fluid">
+        <div class="row theater_card_all_row justify-content-center">
+            <div class="card theater_card_all">
+                <div class="card-header theater_card_all_header">
+                    All Theaters {{ theater_name }}
+                </div>
+                <div class="card-body theater_card_all_body">
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="javascript:thunderstorm_execute();">
+                                <button class="all_theater_button thunderstorm">Thunderstorm</button>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="javascript:power_restore_execute();">
+                                <button class="all_theater_button powerrestore">Power Restored</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="javascript:turn_all_bulbs_on();">
+                                <button class="all_theater_button bulb_on">Bulb's On</button>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <a href="javascript:turn_all_bulbs_off();">
+                                <button class="all_theater_button bulb_off">Bulb's Off</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <a href="javascript:get_bulb_states_all();">
+                                <button class="all_theater_button bulb_status">Bulb Statuses</button>
+                            </a>
+
+                        </div>
+                        <div class="col-6">
+                            <a href="javascript:get_projector_states_all();">
+                                <button class="all_theater_button projector_status">Projector Statuses</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div id="theater_content" class="row">
+
+                <!--START LOOP FOR THEATER OUTPUT HERE-->
+                <script>
+                    var theater_count = '{{ total_theater_val }}'
+                    var theater_counter = 1;
+                    var projector_state = 3;
+                    var light_bulb = 0;
+                    var bulb_state = 3;
+                    var class_bulb = "light_bulb_unknown";
+                    var class_projector = "projector_unknown";
+                    var message = "";
+                    var log = "";
+
+                    //If projector is off(0) then set projector image to RED
+                    //If projector is on(1) then set projector image to Green
+                    if(projector_state==0)
+                    {
+                        class_projector_svg = "projector_red";
+                    }
+                    else if(projector_state==1)
+                    {
+                        class_projector_svg = "projector_green";
+                    }
+                    else{
+                        class_projector_svg = "projector_unknown";
+                    }
+
+                    //If bulb is off(0) then set lightbulb to RED
+                    //If bulb is on(1) then set lightbulb to YELLOW
+                    if(bulb_state==0)
+                    {
+                        class_bulb = "light_bulb_red";
+                    }
+                    else if(bulb_state==1)
+                    {
+                        class_bulb = "light_bulb_yellow";
+                    }
+                    else{
+                        class_bulb = "light_bulb_unknown";
+                    }
+
+                    while(theater_counter<=theater_count)
+                    {
+                        //add_to_log(message);
+                        document.getElementById("theater_content").innerHTML += ' \
+                            <div class=".col-md-4 cust_column"> \
+                                <div class="card theater_card"> \
+                                    <div class="card-header theater_card_header">Theater # ' + theater_counter + '\
+                                        <div> \
+                                            <svg id="light_bulb_'+theater_counter+'" class="'+ class_bulb +'" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" \
+                                            class="bi bi-lightbulb-fill" viewBox="0 0 16 16"> \
+                                                <path d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 \
+                                                13h-5a.5.5 0 0 1-.46-.302l-.761-1.77a1.964 1.964 0 0 0-.453-.618A5.984 5.984 0 0 1 2 6zm3 \
+                                                8.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 \
+                                                15a.5.5 0 0 1-.5-.5z"></path> </svg> \
+                                                <svg class="'+ class_projector_svg +'" id="projector_svg_'+theater_counter+'" width="800px" height="800px" viewBox="0 0 24 24" \
+                                                    enable-background="new 0 0 24 24"> \
+                                                    <path d="M17,22H1c-0.6,0-1-0.4-1-1V9c0-0.6,0.4-1,1-1h16c0.6,0,1,0.4,1,1v2.6l4.7-1.6c0.3-0.1,0.6-0.1, \
+                                                        0.9,0.1S24,10.7,24,11v8 c0,0.3-0.2,0.6-0.4,0.8c-0.3,0.2-0.6,0.2-0.9,0.1L18,18.4V21C18,21.6,17.6,22,17,22z \
+                                                        M2,20h14v-3c0-0.3,0.2-0.6,0.4-0.8 c0.3-0.2,0.6-0.2,0.9-0.1l4.7,1.6v-5.2l-4.7,1.6c-0.3,0.1-0.6, \
+                                                        0.1-0.9-0.1C16.2,13.6,16,13.3,16,13v-3H2V20z"/> \
+                                                    <path d="M6,10c-2.2,0-4-1.8-4-4s1.8-4,4-4s4,1.8,4,4S8.2,10,6,10z M6,4C4.9,4,4,4.9,4,6s0.9,2,2,2s2-0.9,2-2S7.1,4,6,4z"/> \
+                                                    <path d="M12,10c-2.2,0-4-1.8-4-4s1.8-4,4-4s4,1.8,4,4S14.2,10,12,10z M12,4c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S13.1,4,12,4z"/> \
+                                                    <path d="M12,16H6c-0.6,0-1-0.4-1-1s0.4-1,1-1h6c0.6,0,1,0.4,1,1S12.6,16,12,16z"/> \
+                                                </svg> \
+                                        </div> \
+                                    </div> \
+                                    <div class="card-body theater_card_body"> \
+                                        <div class="card inner_card"> \
+                                            <div class="card-header card_header"> \
+                                                Sound Change \
+                                            </div> \
+                                            <div class="card-body inner_card_body"> \
+                                                <form id="sound_change_form_'+ theater_counter +'" action="javascript:sound_change(sound_change_form_'+ theater_counter +');" method="post"> \
+                                                    <input type="hidden" id="theater_id" name="theater_id" value="'+ theater_counter +'" />\
+                                                    <select required class="select_boxes" name="sound_change" id="sound_change"> \
+                                                        <option class="choices" value=""></option> \
+                                                        <option class="choices" value="non_sync">Mute</option> \
+                                                        <option class="choices" value="movie">Movie</option> \
+                                                    </select> \
+                                                    <input class="submit_button" type="submit" value="Execute"> \
+                                                </form> \
+                                            </div> \
+                                        </div> \
+                                        <div class="card inner_card"> \
+                                            <div class="card-header card_header">Projector \
+                                            </div> \
+                                            <div class="card-body inner_card_body"> \
+                                                <form id="projector_change_form_'+ theater_counter +'" action="javascript:projector_execute(projector_change_form_'+ theater_counter +');" method="post"> \
+                                                    <input type="hidden" id="theater_id" name="theater_id" value="'+ theater_counter +'" />\
+                                                    <select required class="select_boxes" name="projector_command" id="projector_command"> \
+                                                        <option class="choices" value=""></option> \
+                                                        <option class="choices" value="bulb_on">Bulb On</option> \
+                                                        <option class="choices" value="bulb_off">Bulb Off</option> \
+                                                        <option class="choices" value="dowser_open">Dowser Open</option> \
+                                                        <option class="choices" value="dowser_close">Dowser Close</option> \
+                                                        <option class="choices" value="power_on">Power On</option> \
+                                                        <option class="choices" value="power_off">Power Off</option> \
+                                                        <option class="choices" value="projector_status">Projector Status</option> \
+                                                    </select> \
+                                                    <input class="submit_button" type="submit" value="Execute" > \
+                                                </form> \
+                                            </div> \
+                                        </div> \
+                                        <div class="card inner_card"> \
+                                            <div class="card-header card_header">Server \
+                                            </div> \
+                                            <div class="card-body inner_card_body"> \
+                                                <form id="server_execute_form_'+ theater_counter +'" action="javascript:server_execute(server_execute_form_'+ theater_counter +');" method="post"> \
+                                                    <input type="hidden" id="theater_id" name="theater_id" value="'+ theater_counter +'" />\
+                                                    <select required class="select_boxes" name="server_command" id="server_command"> \
+                                                        <option class="choices" value=""></option> \
+                                                        <option class="choices" value="pause_film">Pause Movie</option> \
+                                                        <option class="choices" value="restore_film">Restore Playback</option> \
+                                                        <option class="choices" value="play_film">Play Movie</option> \
+                                                    </select> \
+                                                    <input class="submit_button" type="submit" value="Execute" > \
+                                                </form> \
+                                            </div> \
+                                        </div> \
+                                    </div> \
+                                </div> \
+                            </div>';
+                        theater_counter = theater_counter + 1;
+                    }//End while loop to display all theaters
+                </script>
+        </div> 
+
+        <div class="row theater_card_all_row justify-content-center">
+            <textarea class="log_area" id='internal_log' readonly></textarea>
         </div>
-        
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
+    </div>
+
+    <script>    
+        //Get all projector statuses on load
+        get_projector_states_all()
+
+        //Get all bulb statuses on load
+        get_bulb_states_all()
+    </script>
 </body>
 </html>

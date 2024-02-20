@@ -1,1 +1,5 @@
 .venv
+32_bit_env
+.vscode
+server.spec
+__pycache__/communicator_functions.cpython-312.pyc
